@@ -69,7 +69,7 @@ export default function LoginPage() {
               type="button"
               className="w-full bg-blue-100 text-blue-800 p-3 rounded-lg hover:bg-blue-200 transition"
             >
-              S'inscrire
+              S&apos;inscrire
             </button>
           </Link>
         </form>
