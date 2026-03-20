@@ -4,80 +4,101 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signup } from "../../services/authentication";
 
-
 export default function SignupPage() {
   const router = useRouter();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-       try {
-         const res = await signup(firstName, lastName, email, password);
-         localStorage.setItem("token", res.token);
-         router.push("/mainPage");
-     } catch (err: unknown) {
-       if (err && typeof err === "object" && "message" in err) {
-         setError(err.message as string);
-       } else {
-         setError("An unexpected error occurred");
-       }
-     }
-   };
+    if (!firstName || !lastName) {
+      return setError("Nom et prénom requis");
+    }
+
+    if (!validateEmail(email)) {
+      return setError("Email invalide");
+    }
+
+    if (password.length < 6) {
+      return setError("Mot de passe doit contenir au moins 6 caractères");
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await signup(firstName, lastName, email, password);
+      localStorage.setItem("token", res.token);
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Erreur";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl">
-        <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">
+      <div className="w-full max-w-md md:max-w-lg bg-white p-10 rounded-3xl shadow-2xl">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">
           Créer un compte
         </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
-        <form onSubmit={handleSignup} className="flex flex-col gap-4">
+        <form onSubmit={handleSignup} className="flex flex-col gap-5">
           <input
             type="text"
             placeholder="Prénom"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            required
           />
+
           <input
             type="text"
             placeholder="Nom"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            required
           />
+
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
+
           <input
             type="password"
             placeholder="Mot de passe"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex justify-center"
           >
-            S&apos;inscrire
+            {loading ? (
+              <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "S'inscrire"
+            )}
           </button>
         </form>
       </div>
