@@ -22,12 +22,12 @@ export default function DashboardPage() {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen bg-blue-100">
+    <div className="flex min-h-screen bg-linear-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <Sidebar username={username} />
 
       <main className="flex-1 p-6 md:ml-64">
         <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-          <h1 className="text-2xl font-bold">Events</h1>
+          <h1 className="text-4xl text-white font-bold">Events</h1>
           <div className="flex gap-2 flex-wrap">
             <input
               type="text"
@@ -36,7 +36,7 @@ export default function DashboardPage() {
             />
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer"
             >
               + Add Event
             </button>

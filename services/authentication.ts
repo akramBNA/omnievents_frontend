@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const login = async (email: string, password: string) => {
@@ -21,8 +22,9 @@ export const login = async (email: string, password: string) => {
   return data;
 };
 
-export const logout = () => {
+export const logout = (router: any) => {
   localStorage.removeItem("token");
+  router.push("/");
 };
 
 export const signup = async (

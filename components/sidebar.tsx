@@ -33,14 +33,14 @@ export default function Sidebar({ username }: SidebarProps) {
       >
         <div className="flex flex-col h-full justify-between p-6">
           <div>
-            <h1 className="text-xl font-bold mb-4">DASHBOARD</h1>
+            <h1 className="text-2xl font-bold mb-4">DASHBOARD</h1>
             <p className="text-gray-700 mb-6">Welcome, {username}</p>
 
             <nav className="flex flex-col gap-2">
-              <button className="w-full text-left p-2 rounded hover:bg-gray-100">
+              <button className="w-full text-left p-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
                 Users
               </button>
-              <button className="w-full text-left p-2 rounded hover:bg-gray-100">
+              <button className="w-full text-left p-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
                 Events
               </button>
             </nav>
