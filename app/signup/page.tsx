@@ -14,6 +14,8 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const currentYear = new Date().getFullYear();
+
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -92,7 +94,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex justify-center"
+            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex justify-center cursor-pointer"
           >
             {loading ? (
               <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -102,6 +104,7 @@ export default function SignupPage() {
           </button>
         </form>
       </div>
+      <div className="text-white justify-center">Realisé par <a href="#" className="text-2xl font-bold">Akram Benaoun</a> @ {currentYear}</div>
     </div>
   );
 }
