@@ -22,11 +22,6 @@ export const login = async (email: string, password: string) => {
   return data;
 };
 
-export const logout = (router: any) => {
-  localStorage.removeItem("token");
-  router.push("/");
-};
-
 export const signup = async (
   firstName: string,
   lastName: string,
