@@ -22,7 +22,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const logout = () => {
-  sessionStorage.removeItem("token");
+  localStorage.removeItem("token");
 };
 
 export const signup = async (
