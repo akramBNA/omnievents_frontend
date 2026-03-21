@@ -1,26 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { eventsService } from "@/services/events.service";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialState = {
-  events: [],
-  loading: false,
-  error: null,
-};
-
-const eventsSlice = createSlice({
-  name: "events",
-  initialState,
-  reducers: {
-    setEvents: (state, action) => {
-      state.events = action.payload;
-    },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-    setError: (state, action) => {
-      state.error = action.payload;
-    },
+export const fetchEvents = createAsyncThunk(
+  "events/fetchEvents",
+  async (params: any) => {
+    return await eventsService.fetchEvents(params);
   },
-});
+);
 
-export const { setEvents, setLoading, setError } = eventsSlice.actions;
-export default eventsSlice.reducer;
+export const createEvent = createAsyncThunk(
+  "events/createEvent",
+  async (eventData: any) => {
+    return await eventsService.createEvent(eventData);
+  },
+);
