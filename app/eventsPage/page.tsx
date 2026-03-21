@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-export default function mainPage() {
+export default function eventsPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-200 via-green-300 to-green-400 px-4">
             <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-xl text-center">
