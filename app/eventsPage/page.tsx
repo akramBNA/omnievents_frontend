@@ -1,5 +1,13 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-html-link-for-pages */
+"use client";
+
+import { useAuth } from "../../hooks/useAuth";
+
 export default function eventsPage() {
+
+    useAuth(["user", "admin", "super_admin"]);
+    
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-200 via-green-300 to-green-400 px-4">
             <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-xl text-center">
