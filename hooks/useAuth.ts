@@ -1,22 +1,29 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUserFromToken } from "../services/authentication";
 
 export const useAuth = (allowedRoles: string[]) => {
   const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
     const user = getUserFromToken();
 
     if (!user) {
-      router.push("/access-denied");
+      router.replace("/access-denied");
       return;
     }
 
     if (!allowedRoles.includes(user.role)) {
-      router.push("/access-denied");
+      router.replace("/access-denied");
+      return;
     }
+
+    setAuthorized(true);
   }, []);
+
+  return authorized;
 };
