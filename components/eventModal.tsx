@@ -65,7 +65,7 @@ export default function EventModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-30">
+    <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm bg-black/20">
       <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
         <h2 className="text-xl font-bold mb-4">
           {event ? "Edit Event" : "New Event"}

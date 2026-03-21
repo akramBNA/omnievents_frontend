@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const { events } = useSelector((state: RootState) => state.events);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSection, setCurrentSection] = useState<"events" | "users">("events");
 
   const username = "Admin";
 
@@ -37,29 +38,8 @@ export default function DashboardPage() {
       <Sidebar username={username} />
 
       <main className="flex-1 p-6 md:ml-64">
-        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-          <h1 className="text-4xl text-white font-bold">Events</h1>
-          <div className="flex gap-2 flex-wrap">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="p-2 border rounded"
-            />
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 cursor-pointer"
-            >
-              + Add Event
-            </button>
-          </div>
-        </div>
-
-        <EventsTable events={events} />
-
-        <EventModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        {currentSection === "events" && <EventsSection />}
+        {currentSection === "users" && <UsersSection />}
       </main>
     </div>
   );
