@@ -21,7 +21,8 @@ export default function EventsSection() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2 md:ml-64">
+        {" "}
         <h1 className="text-4xl text-white font-bold">Events</h1>
         <div className="flex gap-2 flex-wrap">
           <input

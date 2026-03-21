@@ -9,6 +9,8 @@ import EventModal from "../../components/eventModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvents } from "../../store/eventsSlice";
 import { RootState, AppDispatch } from "../../store";
+import EventsSection from "@/components/eventsSection";
+import UsersSection from "@/components/usersSection";
 
 export default function DashboardPage() {
   const { loading } = useAuth(["user", "admin", "super_admin"]);

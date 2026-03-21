@@ -20,7 +20,7 @@ export default function Sidebar({ username }: SidebarProps) {
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-30 z-10 md:hidden transition-opacity ${
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-10 md:hidden transition-opacity ${
           open ? "block" : "hidden"
         }`}
         onClick={() => setOpen(false)}
@@ -58,6 +58,7 @@ export default function Sidebar({ username }: SidebarProps) {
       <button
         className="fixed top-4 left-4 z-30 md:hidden bg-white p-2 rounded shadow"
         onClick={() => setOpen(true)}
+        style={{ top: "1rem", left: "1rem" }}
       >
         ☰
       </button>
