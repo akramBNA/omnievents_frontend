@@ -34,8 +34,17 @@ export default function LoginPage() {
 
     try {
       const res = await login(email, password);
-      localStorage.setItem("token", res.token);
-      router.push("/dashboard");
+      const payload = JSON.parse(atob(res.token.split(".")[1]));
+
+      if (payload.role === "admin" || payload.role === "super_admin") {
+        localStorage.setItem("token", res.token);
+
+        router.push("/dashboard");
+      } else {
+        localStorage.setItem("token", res.token);
+
+        router.push("/eventsPage");
+      }
     } catch (err: unknown) {
       setError((err instanceof Error ? err.message : "Erreur") || "Erreur");
     } finally {
