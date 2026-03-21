@@ -6,13 +6,15 @@ import { useAuth } from "../../hooks/useAuth";
 
 export default function eventsPage() {
   const authorized = useAuth(["user", "admin", "super_admin"]);
+
   if (!authorized) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
+        <div className="w-20 h-20 border-10 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <div className="w-full max-w-2xl bg-white p-8 rounded-3xl shadow-xl text-center">
