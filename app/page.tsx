@@ -13,6 +13,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const currentYear = new Date().getFullYear();
+
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -32,8 +34,17 @@ export default function LoginPage() {
 
     try {
       const res = await login(email, password);
-      localStorage.setItem("token", res.token);
-      router.push("/dashboard");
+      const payload = JSON.parse(atob(res.token.split(".")[1]));
+
+      if (payload.role === "admin" || payload.role === "super_admin") {
+        localStorage.setItem("token", res.token);
+
+        router.push("/dashboard");
+      } else {
+        localStorage.setItem("token", res.token);
+
+        router.push("/eventsPage");
+      }
     } catch (err: unknown) {
       setError((err instanceof Error ? err.message : "Erreur") || "Erreur");
     } finally {
@@ -42,7 +53,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <div className="w-full max-w-md md:max-w-lg bg-white p-10 rounded-3xl shadow-2xl">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">
           Bienvenue au OMNIEVENTS
@@ -70,7 +81,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center"
+            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center cursor-pointer"
           >
             {loading ? (
               <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -82,13 +93,26 @@ export default function LoginPage() {
           <Link href="/signup">
             <button
               type="button"
-              className="w-full bg-blue-100 text-blue-900 p-4 rounded-xl hover:bg-blue-200 transition"
+              className="w-full bg-blue-100 text-blue-900 p-4 rounded-xl hover:bg-blue-200 transition cursor-pointer"
             >
               S&apos;inscrire
             </button>
           </Link>
         </form>
       </div>
+      {/* ✅ Footer */}
+      <p className="mt-6 text-white text-sm md:text-base text-center opacity-90">
+        Réalisé par{" "}
+        <a
+          href="https://akram-benaoun.site"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold hover:underline"
+        >
+          Akram Benaoun
+        </a>{" "}
+        © {currentYear}
+      </p>
     </div>
   );
 }

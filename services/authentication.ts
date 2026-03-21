@@ -25,7 +25,12 @@ export const logout = () => {
   sessionStorage.removeItem("token");
 };
 
-export const signup = async ( firstName: string, lastName: string, email: string, password: string ) => {
+export const signup = async (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+) => {
   const res = await fetch(`${API_URL}/users/signUp`, {
     method: "POST",
     headers: {
@@ -46,4 +51,16 @@ export const signup = async ( firstName: string, lastName: string, email: string
   }
 
   return data;
+};
+
+export const getUserFromToken = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload;
+  } catch {
+    return null;
+  }
 };

@@ -1,3 +1,9 @@
+"use client";
+
+import { useAuth } from "../../hooks/useAuth";
+
 export default function Dashboard() {
-  return <h1 className="text-2xl p-6">Welcome to Dashboard</h1>;
+  useAuth(["admin", "super_admin"]);
+
+  return <h1 className="p-6 text-2xl">Dashboard Admin 🚀</h1>;
 }
