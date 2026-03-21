@@ -2,13 +2,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const token = localStorage.getItem("token");
 
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
   async (params: { limit?: number; offset?: number; keyword?: string }) => {
     const query = new URLSearchParams(params as any).toString();
 
-    const res = await fetch(`${API_URL}/events?${query}`);
+    const res = await fetch(`${API_URL}/events/getAllEvents?${query}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await res.json();
 
     if (!res.ok) throw new Error(data.message);
@@ -20,9 +26,7 @@ export const fetchEvents = createAsyncThunk(
 export const createEvent = createAsyncThunk(
   "events/createEvent",
   async (eventData: any) => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(`${API_URL}/events`, {
+    const res = await fetch(`${API_URL}/events/createEvent`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,9 +45,7 @@ export const createEvent = createAsyncThunk(
 export const updateEvent = createAsyncThunk(
   "events/updateEvent",
   async ({ id, eventData }: { id: number; eventData: any }) => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(`${API_URL}/events/${id}`, {
+    const res = await fetch(`${API_URL}/events/updateEvent/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -62,9 +64,7 @@ export const updateEvent = createAsyncThunk(
 export const deleteEvent = createAsyncThunk(
   "events/deleteEvent",
   async (id: number) => {
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(`${API_URL}/events/${id}`, {
+    const res = await fetch(`${API_URL}/events/deleteEvent/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
