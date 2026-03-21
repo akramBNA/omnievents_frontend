@@ -7,8 +7,8 @@ export default function Dashboard() {
 
   if (!authorized) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
+        <div className="w-20 h-20 border-10 border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
