@@ -1,64 +1,55 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// "use client";
-
-// import { useAuth } from "../../hooks/useAuth";
-
-// export default function Dashboard() {
-//   const authorized = useAuth(["admin", "super_admin"]);
-
-//   if (!authorized) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
-//         <div className="w-20 h-20 border-10 border-white border-t-transparent rounded-full animate-spin"></div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
-//       <h1 className="p-6 text-2xl text-white font-bold">Dashboard Admin</h1>
-//     </div>
-//   );
-// }
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import Sidebar from "../../components/sidebar";
+import EventsTable from "../../components/eventsTable";
+import EventModal from "../../components/eventModal";
+
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEvents, deleteEvent } from "../../store/eventsSlice";
+import { fetchEvents } from "../../store/eventsSlice";
 import { RootState, AppDispatch } from "../../store";
 
-export default function EventsPage() {
+export default function DashboardPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { events, loading } = useSelector(
-    (state: RootState) => state.events
-  );
+  const { events } = useSelector((state: RootState) => state.events);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const username = "Admin";
 
   useEffect(() => {
     dispatch(fetchEvents({ limit: 10, offset: 0 }));
   }, [dispatch]);
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Events</h1>
+    <div className="flex min-h-screen bg-blue-100">
+      <Sidebar username={username} />
 
-      {events.map((event: any) => (
-        <div
-          key={event.event_id}
-          className="border p-4 mb-3 rounded-lg shadow"
-        >
-          <h2 className="text-lg font-semibold">{event.event_name}</h2>
-          <p>{event.event_details}</p>
-
-          <button
-            onClick={() => dispatch(deleteEvent(event.event_id))}
-            className="mt-2 bg-red-500 text-white px-3 py-1 rounded"
-          >
-            Delete
-          </button>
+      <main className="flex-1 p-6 md:ml-64">
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <h1 className="text-2xl font-bold">Events</h1>
+          <div className="flex gap-2 flex-wrap">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="p-2 border rounded"
+            />
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              + Add Event
+            </button>
+          </div>
         </div>
-      ))}
+
+        <EventsTable events={events} />
+
+        <EventModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </main>
     </div>
   );
 }
