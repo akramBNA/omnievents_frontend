@@ -10,7 +10,7 @@ export default function DashboardPage() {
   const { loading } = useAuth(["user", "admin", "super_admin"]);
 
   const [currentSection, setCurrentSection] = useState<"events" | "users">(
-    "events"
+    "events",
   );
 
   if (loading) {
@@ -29,7 +29,7 @@ export default function DashboardPage() {
         setCurrentSection={setCurrentSection}
       />
 
-      <main className="flex-1 p-6 md:ml-64">
+      <main className="flex-1 p-6 md:ml-64 mt-12 md:mt-0">
         {currentSection === "events" && <EventsSection />}
         {currentSection === "users" && <UsersSection />}
       </main>
