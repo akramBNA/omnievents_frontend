@@ -81,6 +81,27 @@ export const deleteEvent = createAsyncThunk(
   },
 );
 
+export const subscribeToEvent = createAsyncThunk(
+  "events/subscribeToEvent",
+  async ({ user_id, event_id }: { user_id: number; event_id: number }) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${API_URL}/users_events/subscribeToEvent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id, event_id }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    return data;
+  }
+);
+
 const eventsSlice = createSlice({
   name: "events",
   initialState: {
