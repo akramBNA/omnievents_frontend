@@ -73,7 +73,9 @@ export default function Sidebar({
       </aside>
 
       <button
-        className="fixed top-4 left-4 z-30 md:hidden bg-white p-2 rounded shadow"
+        className={`fixed top-4 left-4 z-30 md:hidden bg-white p-2 rounded shadow ${
+          open ? "hidden" : ""
+        }`}
         onClick={() => setOpen(true)}
       >
         ☰

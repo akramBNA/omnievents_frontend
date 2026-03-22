@@ -29,15 +29,24 @@ interface Event {
 
 interface EventsTableProps {
   events: Event[];
+  total: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (page: number) => void;
+  onRowsPerPageChange: (rows: number) => void;
 }
 
-export default function EventsTable({ events }: EventsTableProps) {
+export default function EventsTable({
+  events,
+  total,
+  page,
+  rowsPerPage,
+  onPageChange,
+  onRowsPerPageChange,
+}: EventsTableProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [editingEvent, setEditingEvent] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleEdit = (event: any) => {
     setEditingEvent(event);
@@ -71,22 +80,14 @@ export default function EventsTable({ events }: EventsTableProps) {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    onPageChange(newPage);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    onRowsPerPageChange(parseInt(event.target.value, 10));
   };
-
-  //   if (events.length === 0)
-  //     return (
-  //       <div className="text-center text-white mt-20 text-lg opacity-80">
-  //         Il n&apos;y a pas d&apos;événements.
-  //       </div>
-  //     );
 
   return (
     <>
@@ -104,7 +105,7 @@ export default function EventsTable({ events }: EventsTableProps) {
           className="rounded-xl overflow-hidden"
         >
           <Table>
-            <TableHead>
+            <TableHead className="bg-gray-300">
               <TableRow>
                 {[
                   "Nom d' événement",
@@ -147,7 +148,7 @@ export default function EventsTable({ events }: EventsTableProps) {
           <TablePagination
             rowsPerPageOptions={[5, 10, 20]}
             component="div"
-            count={events.length}
+            count={total}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

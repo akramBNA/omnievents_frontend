@@ -106,8 +106,8 @@ const eventsSlice = createSlice({
         state.error = action.error.message || "Error";
       })
 
-      .addCase(createEvent.fulfilled, (state, action) => {
-        state.events.unshift(action.payload);
+      .addCase(createEvent.fulfilled, (state) => {
+        // state.events.unshift(action.payload);
       })
 
       .addCase(updateEvent.fulfilled, (state, action) => {
@@ -116,10 +116,10 @@ const eventsSlice = createSlice({
         );
       })
 
-      .addCase(deleteEvent.fulfilled, (state, action) => {
-        state.events = state.events.filter(
-          (e: any) => e.event_id !== action.payload,
-        );
+      .addCase(deleteEvent.fulfilled, (state) => {
+        // state.events = state.events.filter(
+        //   (e: any) => e.event_id !== action.payload,
+        // );
       });
   },
 });
