@@ -44,10 +44,8 @@ export default function LoginPage() {
 
     try {
       const res = await login(email, password);
-      // const payload = JSON.parse(atob(res.token.split(".")[1]));
-      // const data = JSON.parse(JSON.stringify(res.data));
       const role = setAuthFromResponse(res, dispatch);
-
+    
       if (role === "admin" || role === "super_admin") {
         router.push("/dashboard");
       } else {

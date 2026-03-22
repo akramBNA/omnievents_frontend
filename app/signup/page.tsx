@@ -59,7 +59,9 @@ export default function SignupPage() {
       // const data = res.data;
 
       const role = setAuthFromResponse(res, dispatch);
-      if (role && role === "admin") {
+            console.log("res ----> L: ", res);
+
+      if (role && role === "user") {
         router.push("/eventsPage");
       } else {
         router.push("/access-denied");
