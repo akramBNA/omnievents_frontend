@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
-  async (params: { limit?: number; offset?: number; keyword?: string }) => {
+  async (params: { limit?: number; offset?: number; keyword?: string; user_id?: number }) => {
     const query = new URLSearchParams(params as any).toString();
     const token = localStorage.getItem("token");
 

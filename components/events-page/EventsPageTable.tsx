@@ -9,8 +9,9 @@ import {
   TableBody,
   Button,
   TablePagination,
+  Table,
 } from "@mui/material";
-import { Table } from "lucide-react";
+// import { Table } from "lucide-react";
 import { useSelector } from "react-redux";
 
 interface EventsPageTableProps {
@@ -45,49 +46,54 @@ export default function EventsPageTable({
         </div>
       ) : (
         <>
-          <TableContainer component={Paper} className="rounded-xl">
-            <Table>
-              <TableHead className="bg-gray-100">
-                <TableRow>
-                  <TableCell>Nom</TableCell>
-                  <TableCell>Détails</TableCell>
-                  <TableCell>Début</TableCell>
-                  <TableCell>Fin</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {events.map((e: any) => {
-                  const isSubscribed = e.isSubscribed;
-
-                  return (
-                    <TableRow key={e.event_id} hover>
-                      <TableCell>{e.event_name}</TableCell>
-                      <TableCell>{e.event_details}</TableCell>
-                      <TableCell>{e.event_start_date}</TableCell>
-                      <TableCell>{e.event_end_date}</TableCell>
-
-                      <TableCell align="center">
-                        <Button
-                          variant="contained"
-                          size="small"
-                          disabled={isSubscribed}
-                          onClick={() => onSubscribe(e)}
-                          sx={{
-                            backgroundColor: isSubscribed ? "#ccc" : "#2563eb",
-                          }}
-                        >
-                          {isSubscribed ? "Inscrit" : "S'inscrire"}
-                        </Button>
+          <div className="overflow-x-auto">
+            <TableContainer component={Paper} className="rounded-xl">
+              <Table>
+                <TableHead className="bg-gray-100">
+                  <TableRow>
+                    <TableCell>Nom</TableCell>
+                    <TableCell>Détails</TableCell>
+                    <TableCell>Début</TableCell>
+                    <TableCell>Fin</TableCell>
+                    <TableCell align="center">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {events.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} align="center">
+                        Aucun événement trouvé
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
+                  ) : (
+                    events.map((e: any) => (
+                      <TableRow key={e.event_id} hover>
+                        <TableCell>{e.event_name}</TableCell>
+                        <TableCell>{e.event_details}</TableCell>
+                        <TableCell>{e.event_start_date}</TableCell>
+                        <TableCell>{e.event_end_date}</TableCell>
+                        <TableCell align="center">
+                          <Button
+                            variant="contained"
+                            size="small"
+                            disabled={e.isSubscribed}
+                            onClick={() => onSubscribe(e)}
+                            sx={{
+                              backgroundColor: e.isSubscribed
+                                ? "#ccc"
+                                : "#2563eb",
+                            }}
+                          >
+                            {e.isSubscribed ? "Inscrit" : "S'inscrire"}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
           <TablePagination
             component="div"
             count={total}

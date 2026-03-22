@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 
 export default function EventsPage() {
   const { loading } = useAuth(["user", "admin", "super_admin"]);
+  const user = useSelector((s: RootState) => s.auth.user);
 
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -28,6 +29,7 @@ export default function EventsPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    if (!user) return;
     dispatch(
       fetchEvents({
         limit: rowsPerPage,
@@ -45,8 +47,6 @@ export default function EventsPage() {
       }, 500),
     [],
   );
-
-  const user = useSelector((s: RootState) => s.auth.user);
 
   const handleSubscribe = async (event: any) => {
     if (!user) return;
@@ -72,25 +72,29 @@ export default function EventsPage() {
 
       <div className="p-4 md:p-10 flex justify-center">
         <div className="w-full max-w-6xl">
-          <EventsPageTable
-            events={events}
-            total={total}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={setPage}
-            onRowsPerPageChange={(val: number) => {
-              setRowsPerPage(val);
-              setPage(0);
-            }}
-            loading={eventsLoading}
-            onSubscribe={handleSubscribe}
-          />
+          <div className="hidden md:block">
+            <EventsPageTable
+              events={events}
+              total={total}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={setPage}
+              onRowsPerPageChange={(val: number) => {
+                setRowsPerPage(val);
+                setPage(0);
+              }}
+              loading={eventsLoading}
+              onSubscribe={handleSubscribe}
+            />
+          </div>
 
-          <EventsPageCards
-            events={events}
-            onSubscribe={handleSubscribe}
-            userId={user?.user_id}
-          />
+          <div className="md:hidden">
+            <EventsPageCards
+              events={events}
+              onSubscribe={handleSubscribe}
+              userId={user?.user_id}
+            />
+          </div>
         </div>
       </div>
     </div>
