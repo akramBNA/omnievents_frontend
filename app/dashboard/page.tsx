@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import Sidebar from "../../components/sidebar";
-import EventsSection from "../../components/eventsSection";
-import UsersSection from "../../components/usersSection";
+import Sidebar from "../../components/sidebar/sidebar";
+import EventsSection from "../../components/events-edit/eventsSection";
+import UsersSection from "../../components/users-edit/usersSection";
 
 export default function DashboardPage() {
   const { loading } = useAuth(["admin", "super_admin"]);
