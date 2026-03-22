@@ -7,15 +7,20 @@ export default function EventsPageCards({ events, onSubscribe, userId }: any) {
   return (
     <div className="md:hidden flex flex-col gap-4">
       {events.map((event: any) => (
-        <div key={event.event_id} className="bg-white rounded-2xl shadow p-4 flex flex-col gap-3">
+        <div
+          key={event.event_id}
+          className="bg-white rounded-2xl shadow p-4 flex flex-col gap-3"
+        >
           <div>
             <span className="font-semibold">Nom:</span> {event.event_name}
           </div>
           <div>
-            <span className="font-semibold">Détails:</span> {event.event_details}
+            <span className="font-semibold">Détails:</span>{" "}
+            {event.event_details}
           </div>
           <div>
-            <span className="font-semibold">Début:</span> {event.event_start_date}
+            <span className="font-semibold">Début:</span>{" "}
+            {event.event_start_date}
           </div>
           <div>
             <span className="font-semibold">Fin:</span> {event.event_end_date}
@@ -25,7 +30,7 @@ export default function EventsPageCards({ events, onSubscribe, userId }: any) {
             size="small"
             variant="contained"
             fullWidth
-            disabled={event.isSubscribed}
+            disabled={!!event.isSubscribed}
             onClick={() => onSubscribe(event)}
             sx={{ backgroundColor: event.isSubscribed ? "#ccc" : "#2563eb" }}
           >

@@ -72,7 +72,7 @@ export default function EventsPage() {
 
       <div className="p-4 md:p-10 flex justify-center">
         <div className="w-full max-w-6xl">
-          <div className="hidden md:block">
+          <div>
             <EventsPageTable
               events={events}
               total={total}
@@ -88,13 +88,13 @@ export default function EventsPage() {
             />
           </div>
 
-          <div className="md:hidden">
+          {/* <div className="md:hidden">
             <EventsPageCards
               events={events}
               onSubscribe={handleSubscribe}
               userId={user?.user_id}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
