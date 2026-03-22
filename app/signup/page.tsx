@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { setAuthFromResponse } from "@/utils/auth.utils";
 import { setUser } from "@/store/authSlice";
 import { useRouter } from "next/navigation";
 import { signup } from "../../services/authentication";
@@ -26,15 +27,15 @@ export default function SignupPage() {
     e.preventDefault();
     setError("");
 
-    if(!firstName) {
+    if (!firstName) {
       return setError("Prénom requis");
     }
-    
-    if(!lastName) {
+
+    if (!lastName) {
       return setError("Nom requis");
     }
 
-    if(!email) {
+    if (!email) {
       return setError("Email requis");
     }
 
@@ -45,7 +46,7 @@ export default function SignupPage() {
     if (!password) {
       return setError("Mot de passe requis");
     }
-    
+
     if (password.length < 6) {
       return setError("Mot de passe doit contenir au moins 6 caractères");
     }
@@ -54,24 +55,15 @@ export default function SignupPage() {
 
     try {
       const res = await signup(firstName, lastName, email, password);
-      const payload = JSON.parse(atob(res.token.split(".")[1]));
-      const data = res.data;
+      // const payload = JSON.parse(atob(res.token.split(".")[1]));
+      // const data = res.data;
 
-      localStorage.setItem("token", res.token);
-      dispatch(
-        setUser({
-          user: {
-            user_id: data.user_id,
-            user_name: data.user_name,
-            user_lastname: data.user_lastname,
-            user_email: data.user_email,
-            user_role_id: data.user_role_id,
-          },
-          token: res.token,
-          role: payload.role,
-        }),
-      );
-      router.push("/eventsPage");
+      const role = setAuthFromResponse(res, dispatch);
+      if (role && role === "admin") {
+        router.push("/eventsPage");
+      } else {
+        router.push("/access-denied");
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Erreur";
       setError(errorMessage);
@@ -83,7 +75,9 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <div className="w-full max-w-md md:max-w-lg bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">Créer un compte</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">
+          Créer un compte
+        </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
