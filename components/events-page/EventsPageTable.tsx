@@ -27,7 +27,9 @@ export default function EventsPageTable({
   loading,
 }: any) {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((s: RootState) => s.auth);
+  const user = useSelector((s: RootState) => s.auth.user);
+
+  if (!user) return null;
 
   const handleSubscribe = async (event: any) => {
     const res = await dispatch(
