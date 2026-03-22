@@ -81,12 +81,12 @@ export default function EventsTable({ events }: EventsTableProps) {
     setPage(0);
   };
 
-  if (events.length === 0)
-    return (
-      <div className="text-center text-white mt-20 text-lg opacity-80">
-        Il n&apos;y a pas d&apos;événements.
-      </div>
-    );
+  //   if (events.length === 0)
+  //     return (
+  //       <div className="text-center text-white mt-20 text-lg opacity-80">
+  //         Il n&apos;y a pas d&apos;événements.
+  //       </div>
+  //     );
 
   return (
     <>
@@ -106,17 +106,26 @@ export default function EventsTable({ events }: EventsTableProps) {
           <Table>
             <TableHead>
               <TableRow>
-                {["Nom d' événement", "Détails d'événement", "Date de début", "Date de fin", "Actions"].map(
-                  (h) => (
-                    <TableCell key={h}>{h}</TableCell>
-                  ),
-                )}
+                {[
+                  "Nom d' événement",
+                  "Détails d'événement",
+                  "Date de début",
+                  "Date de fin",
+                  "Actions",
+                ].map((h) => (
+                  <TableCell key={h}>{h}</TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {events
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((event) => (
+              {events.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    Il n&apos;y a pas d&apos;événements.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                events.map((event) => (
                   <TableRow key={event.event_id}>
                     <TableCell>{event.event_name}</TableCell>
                     <TableCell>{event.event_details}</TableCell>
@@ -131,7 +140,8 @@ export default function EventsTable({ events }: EventsTableProps) {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              )}
             </TableBody>
           </Table>
           <TablePagination
@@ -146,39 +156,48 @@ export default function EventsTable({ events }: EventsTableProps) {
         </TableContainer>
       </div>
       <div className="md:hidden flex flex-col gap-4">
-        {events.map((event) => (
-          <div
-            key={event.event_id}
-            className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
-          >
-            <div className="flex justify-between">
-              <span className="font-semibold">Nom d&apos;événement:</span>
-              <span>{event.event_name}</span>
-            </div>
+        {events.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-lg p-6 text-center text-gray-600 font-medium">
+            Il n&apos;y a pas d&apos;événements.
+          </div>
+        ) : (
+          events.map((event) => (
+            <div
+              key={event.event_id}
+              className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
+            >
+              <div className="flex justify-between">
+                <span className="font-semibold">Nom d&apos;événement:</span>
+                <span>{event.event_name}</span>
+              </div>
 
-            <div className="flex justify-between">
-              <span className="font-semibold">Détails d&apos;événement:</span>
-              <span className="text-right">{event.event_details}</span>
-            </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">Détails d&apos;événement:</span>
+                <span className="text-right">{event.event_details}</span>
+              </div>
 
-            <div className="flex justify-between">
-              <span className="font-semibold">Date de début:</span>
-              <span>{event.event_start_date}</span>
-            </div>
+              <div className="flex justify-between">
+                <span className="font-semibold">Date de début:</span>
+                <span>{event.event_start_date}</span>
+              </div>
 
-            <div className="flex justify-between">
-              <span className="font-semibold">Date de fin:</span>
-              <span>{event.event_end_date}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold">Actions:</span>
-              <div className="flex justify-end gap-3 mt-2">
-                <button onClick={() => handleEdit(event)}>✏️</button>
-                <button onClick={() => handleDelete(event.event_id)}>🗑️</button>
+              <div className="flex justify-between">
+                <span className="font-semibold">Date de fin:</span>
+                <span>{event.event_end_date}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="font-semibold">Actions:</span>
+                <div className="flex justify-end gap-3 mt-2">
+                  <button onClick={() => handleEdit(event)}>✏️</button>
+                  <button onClick={() => handleDelete(event.event_id)}>
+                    🗑️
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </>
   );
