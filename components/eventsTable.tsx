@@ -134,7 +134,6 @@ export default function EventsTable({ events }: EventsTableProps) {
           />
         </TableContainer>
       </div>
-      {/* MOBILE CARDS */}
       <div className="md:hidden flex flex-col gap-4">
         {events.map((event) => (
           <div
