@@ -55,19 +55,19 @@ export default function Sidebar({
         <div className="flex flex-col h-full justify-between p-6">
           <div>
             <h1 className="text-2xl font-bold mb-4">DASHBOARD</h1>
-            <p className="text-gray-700 mb-6">Welcome, {username}</p>
+            <p className="text-gray-700 mb-6">Bonjour, {username}</p>
 
             <nav className="flex flex-col gap-2">
-              {navButton("Users", "users")}
-              {navButton("Events", "events")}
+              {navButton("Utilisateurs", "users")}
+              {navButton("Événements", "events")}
             </nav>
           </div>
 
           <button
             onClick={logout}
-            className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 mt-4"
+            className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 mt-4 cursor-pointer"
           >
-            Logout
+            Déconnexion
           </button>
         </div>
       </aside>
