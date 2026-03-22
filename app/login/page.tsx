@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { login } from "@/services/authentication";
 import { setAuthFromResponse } from "@/utils/auth.utils";
-import { setUser } from "@/store/authSlice";
 import { useRouter } from "next/navigation";
-import { signup } from "../../services/authentication";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
 
-export default function SignupPage() {
-  const dispatch = useDispatch();
+export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,17 +21,9 @@ export default function SignupPage() {
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (!firstName) {
-      return setError("Prénom requis");
-    }
-
-    if (!lastName) {
-      return setError("Nom requis");
-    }
 
     if (!email) {
       return setError("Email requis");
@@ -42,7 +32,6 @@ export default function SignupPage() {
     if (!validateEmail(email)) {
       return setError("Email invalide");
     }
-
     if (!password) {
       return setError("Mot de passe requis");
     }
@@ -54,17 +43,16 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const res = await signup(firstName, lastName, email, password);
+      const res = await login(email, password);
       const role = setAuthFromResponse(res, dispatch);
-
-      if (role && role === "user") {
-        router.push("/eventsPage");
+    
+      if (role === "admin" || role === "super_admin") {
+        router.push("/dashboard");
       } else {
-        router.push("/access-denied");
+        router.push("/eventsPage");
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Erreur";
-      setError(errorMessage);
+      setError((err instanceof Error ? err.message : "Erreur") || "Erreur");
     } finally {
       setLoading(false);
     }
@@ -74,32 +62,16 @@ export default function SignupPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <div className="w-full max-w-md md:max-w-lg bg-white p-10 rounded-3xl shadow-2xl">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">
-          Créer un compte
+          Bienvenue au OMNIEVENTS
         </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
-        <form onSubmit={handleSignup} className="flex flex-col gap-5">
-          <input
-            type="text"
-            placeholder="Prénom"
-            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-
-          <input
-            type="text"
-            placeholder="Nom"
-            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-
+        <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <input
             type="email"
             placeholder="Email"
-            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
+            className="w-full p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -107,7 +79,7 @@ export default function SignupPage() {
           <input
             type="password"
             placeholder="Mot de passe"
-            className="p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
+            className="w-full p-4 text-lg border rounded-xl focus:ring-2 focus:ring-blue-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -115,21 +87,23 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex justify-center cursor-pointer"
+            className="w-full bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center cursor-pointer"
           >
             {loading ? (
               <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              "S'inscrire"
+              "Se connecter"
             )}
           </button>
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="w-full bg-red-600 text-white p-4 rounded-xl hover:bg-red-700 transition cursor-pointer"
-          >
-            Retour
-          </button>
+
+          <Link href="/signup">
+            <button
+              type="button"
+              className="w-full bg-blue-100 text-blue-900 p-4 rounded-xl hover:bg-blue-200 transition cursor-pointer"
+            >
+              S&apos;inscrire
+            </button>
+          </Link>
         </form>
       </div>
       <p className="mt-6 text-white text-sm md:text-base text-center opacity-90">
@@ -143,7 +117,7 @@ export default function SignupPage() {
           Akram Benaoun
         </a>{" "}
         © {currentYear}
-      </p>{" "}
+      </p>
     </div>
   );
 }

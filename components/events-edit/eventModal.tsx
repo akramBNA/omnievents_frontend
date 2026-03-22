@@ -2,9 +2,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createEvent, updateEvent } from "../store/eventsSlice";
+import { createEvent, updateEvent } from "../../store/eventsSlice";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
+import { AppDispatch } from "../../store";
 import Swal from "sweetalert2";
 
 interface Event {

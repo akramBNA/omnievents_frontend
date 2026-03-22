@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
-  async (params: { limit?: number; offset?: number; keyword?: string }) => {
+  async (params: { limit?: number; offset?: number; keyword?: string; user_id?: number }) => {
     const query = new URLSearchParams(params as any).toString();
     const token = localStorage.getItem("token");
 
@@ -16,7 +16,7 @@ export const fetchEvents = createAsyncThunk(
       },
     });
     const data = await res.json();
-
+        
     if (!res.ok) throw new Error(data.message);
 
     return data;
@@ -81,6 +81,27 @@ export const deleteEvent = createAsyncThunk(
   },
 );
 
+export const subscribeToEvent = createAsyncThunk(
+  "events/subscribeToEvent",
+  async ({ user_id, event_id }: { user_id: number; event_id: number }) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${API_URL}/users_events/subscribeToEvent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id, event_id }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    return data;
+  }
+);
+
 const eventsSlice = createSlice({
   name: "events",
   initialState: {
@@ -106,8 +127,8 @@ const eventsSlice = createSlice({
         state.error = action.error.message || "Error";
       })
 
-      .addCase(createEvent.fulfilled, (state) => {
-        // state.events.unshift(action.payload);
+      .addCase(createEvent.fulfilled, (state, action) => {
+        state.events.unshift(action.payload);
       })
 
       .addCase(updateEvent.fulfilled, (state, action) => {
@@ -116,10 +137,10 @@ const eventsSlice = createSlice({
         );
       })
 
-      .addCase(deleteEvent.fulfilled, (state) => {
-        // state.events = state.events.filter(
-        //   (e: any) => e.event_id !== action.payload,
-        // );
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        state.events = state.events.filter(
+          (e: any) => e.event_id !== action.payload,
+        );
       });
   },
 });

@@ -3,8 +3,8 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEvents } from "../store/eventsSlice";
-import { RootState, AppDispatch } from "../store";
+import { fetchEvents } from "../../store/eventsSlice";
+import { RootState, AppDispatch } from "../../store";
 import debounce from "lodash/debounce";
 
 import EventsTable from "./eventsTable";
