@@ -55,11 +55,7 @@ export default function SignupPage() {
 
     try {
       const res = await signup(firstName, lastName, email, password);
-      // const payload = JSON.parse(atob(res.token.split(".")[1]));
-      // const data = res.data;
-
       const role = setAuthFromResponse(res, dispatch);
-            console.log("res ----> L: ", res);
 
       if (role && role === "user") {
         router.push("/eventsPage");
