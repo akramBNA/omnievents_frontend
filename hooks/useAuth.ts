@@ -4,20 +4,38 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserFromToken } from "../services/authentication";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/authSlice";
 
 export const useAuth = (allowedRoles: string[]) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const user = getUserFromToken();
+    const payload = getUserFromToken();
+    const token = localStorage.getItem("token");
 
-    if (!user || !allowedRoles.includes(user.role)) {
+    if (!payload || !allowedRoles.includes(payload.role)) {
       router.push("/access-denied");
-    } else {
-      setLoading(false);
+      return;
     }
-  }, [allowedRoles, router]);
+    dispatch(
+      setUser({
+        user: {
+          user_id: payload.user_id,
+          user_name: payload.user_name || "",
+          user_lastname: payload.user_lastname || "",
+          user_email: payload.user_email || "",
+          user_role_id: payload.role === "super_admin" ? 1 : payload.role === "admin" ? 2 : 3,
+        },
+        token: token || "",
+        role: payload.role,
+      }),
+    );
+
+    setLoading(false);
+  }, [allowedRoles, router, dispatch]);
 
   return { loading };
 };
