@@ -32,8 +32,8 @@ export default function EventsSection() {
         <div className="flex gap-2 flex-wrap">
           <input
             type="text"
-            placeholder="Search..."
-            className="p-2 border rounded"
+            placeholder="Search event name.."
+            className="p-2 rounded-lg bg-white/90 border border-white shadow focus:outline-none"
             onChange={(e) => debouncedSearch(e.target.value)}
           />
           <button
