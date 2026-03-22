@@ -4,9 +4,12 @@ import { useState } from "react";
 import { login } from "../services/authentication";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,14 +38,39 @@ export default function LoginPage() {
     try {
       const res = await login(email, password);
       const payload = JSON.parse(atob(res.token.split(".")[1]));
+      const data = JSON.parse(JSON.stringify(res.data));
 
       if (payload.role === "admin" || payload.role === "super_admin") {
         localStorage.setItem("token", res.token);
-
+        dispatch(
+          setUser({
+            user: {
+              user_id: data.user_id,
+              user_name: data.user_name,
+              user_lastname: data.user_lastname,
+              user_email: data.user_email,
+              user_role_id: data.user_role_id,
+            },
+            token: res.token,
+            role: payload.role,
+          }),
+        );
         router.push("/dashboard");
       } else {
         localStorage.setItem("token", res.token);
-
+        dispatch(
+          setUser({
+            user: {
+              user_id: data.user_id,
+              user_name: data.user_name,
+              user_lastname: data.user_lastname,
+              user_email: data.user_email,
+              user_role_id: data.user_role_id,
+            },
+            token: res.token,
+            role: payload.role,
+          }),
+        );
         router.push("/eventsPage");
       }
     } catch (err: unknown) {

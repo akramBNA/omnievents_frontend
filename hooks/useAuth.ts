@@ -7,23 +7,17 @@ import { getUserFromToken } from "../services/authentication";
 
 export const useAuth = (allowedRoles: string[]) => {
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const user = getUserFromToken();
 
-    if (!user) {
-      router.replace("/access-denied");
-      return;
+    if (!user || !allowedRoles.includes(user.role)) {
+      router.push("/access-denied");
+    } else {
+      setLoading(false);
     }
+  }, [allowedRoles, router]);
 
-    if (!allowedRoles.includes(user.role)) {
-      router.replace("/access-denied");
-      return;
-    }
-
-    setAuthorized(true);
-  }, []);
-
-  return authorized;
+  return { loading };
 };
