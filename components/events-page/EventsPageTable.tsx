@@ -1,21 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
+import { RootState } from "@/store";
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Paper,
   TableHead,
   TableRow,
-  Paper,
-  TablePagination,
+  TableCell,
+  TableBody,
   Button,
+  TablePagination,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { subscribeToEvent } from "@/store/eventsSlice";
-import { RootState, AppDispatch } from "@/store";
-import Swal from "sweetalert2";
+import { Table } from "lucide-react";
+import { useSelector } from "react-redux";
+
+interface EventsPageTableProps {
+  events: any[];
+  total: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (page: number) => void;
+  onRowsPerPageChange: (rows: number) => void;
+  loading: boolean;
+  onSubscribe: (event: any) => void;
+}
 
 export default function EventsPageTable({
   events,
@@ -25,26 +32,10 @@ export default function EventsPageTable({
   onPageChange,
   onRowsPerPageChange,
   loading,
-}: any) {
-  const dispatch = useDispatch<AppDispatch>();
+  onSubscribe,
+}: EventsPageTableProps) {
   const user = useSelector((s: RootState) => s.auth.user);
-
   if (!user) return null;
-
-  const handleSubscribe = async (event: any) => {
-    const res = await dispatch(
-      subscribeToEvent({
-        user_id: user.user_id,
-        event_id: event.event_id,
-      }),
-    );
-
-    if (subscribeToEvent.fulfilled.match(res)) {
-      Swal.fire("Succès", "Inscription réussie", "success");
-    } else {
-      Swal.fire("Info", "Déjà inscrit ou erreur", "info");
-    }
-  };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4">
@@ -82,7 +73,7 @@ export default function EventsPageTable({
                           variant="contained"
                           size="small"
                           disabled={isSubscribed}
-                          onClick={() => handleSubscribe(e)}
+                          onClick={() => onSubscribe(e)}
                           sx={{
                             backgroundColor: isSubscribed ? "#ccc" : "#2563eb",
                           }}
