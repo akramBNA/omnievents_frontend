@@ -56,11 +56,29 @@ export default function EventModal({
     };
 
     if (event) {
-      await dispatch(updateEvent({ id: Number(event.event_id), eventData }));
-      Swal.fire("Updated!", "Event has been updated.", "success");
+      const res = await dispatch(
+        updateEvent({ id: Number(event.event_id), eventData }),
+      );
+      if (updateEvent.rejected.match(res)) {
+        Swal.fire(
+          "Erreur!",
+          res.error.message || "Une erreur est survenue.",
+          "error",
+        );
+        return;
+      }
+      Swal.fire("Mis à jour!", "L'événement a été mis à jour.", "success");
     } else {
-      await dispatch(createEvent(eventData));
-      Swal.fire("Created!", "Event has been created.", "success");
+      const res = await dispatch(createEvent(eventData));
+      if (createEvent.rejected.match(res)) {
+        Swal.fire(
+          "Erreur!",
+          res.error.message || "Une erreur est survenue.",
+          "error",
+        );
+        return;
+      }
+      Swal.fire("Créé!", "L'événement a été créé.", "success");
     }
     onClose();
   };
@@ -71,20 +89,20 @@ export default function EventModal({
     <div className="fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm bg-black/20">
       <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
         <h2 className="text-xl font-bold mb-4">
-          {event ? "Edit Event" : "New Event"}
+          {event ? "Modifier Événement" : "Nouveau Événement"}
         </h2>
 
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Event Name"
+            placeholder="Nom d'événement"
             className="p-2 border rounded"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <textarea
-            placeholder="Event Details"
+            placeholder="Détails d'événement"
             className="p-2 border rounded"
             value={details}
             onChange={(e) => setDetails(e.target.value)}
@@ -111,13 +129,13 @@ export default function EventModal({
               className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
               onClick={onClose}
             >
-              Cancel
+              Annuler
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
             >
-              Save
+              Enregistrer
             </button>
           </div>
         </form>

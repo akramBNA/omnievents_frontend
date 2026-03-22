@@ -46,19 +46,26 @@ export default function EventsTable({ events }: EventsTableProps) {
 
   const handleDelete = async (id: number) => {
     const { isConfirmed } = await Swal.fire({
-      title: "Are you sure?",
-      text: "This event will be deleted!",
+      title: "Etes vous sûr de supprimer cet événement ?",
+      text: "Cet événement sera supprimé !",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Oui, supprimer !",
+      confirmButtonColor: "#d33",
+      cancelButtonText: "Annuler",
+      cancelButtonColor: "#3085d6",
     });
 
     if (isConfirmed) {
       const result = await dispatch(deleteEvent(id));
       if (deleteEvent.fulfilled.match(result)) {
-        Swal.fire("Deleted!", "Event has been deleted.", "success");
+        Swal.fire("Supprimé!", "L'événement a été supprimé.", "success");
       } else {
-        Swal.fire("Error!", "Failed to delete event.", "error");
+        Swal.fire(
+          "Erreur!",
+          "Échec de la suppression de l'événement.",
+          "error",
+        );
       }
     }
   };
@@ -75,7 +82,11 @@ export default function EventsTable({ events }: EventsTableProps) {
   };
 
   if (events.length === 0)
-    return <p className="text-white">There is no events.</p>;
+    return (
+      <div className="text-center text-white mt-20 text-lg opacity-80">
+        Il n&apos;y a pas d&apos;événements.
+      </div>
+    );
 
   return (
     <>
@@ -95,7 +106,7 @@ export default function EventsTable({ events }: EventsTableProps) {
           <Table>
             <TableHead>
               <TableRow>
-                {["Name", "Details", "Start Date", "End Date", "Actions"].map(
+                {["Nom d' événement", "Détails d'événement", "Date de début", "Date de fin", "Actions"].map(
                   (h) => (
                     <TableCell key={h}>{h}</TableCell>
                   ),
@@ -141,28 +152,30 @@ export default function EventsTable({ events }: EventsTableProps) {
             className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
           >
             <div className="flex justify-between">
-              <span className="font-semibold">Name:</span>
+              <span className="font-semibold">Nom d&apos;événement:</span>
               <span>{event.event_name}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="font-semibold">Details:</span>
+              <span className="font-semibold">Détails d&apos;événement:</span>
               <span className="text-right">{event.event_details}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="font-semibold">Start:</span>
+              <span className="font-semibold">Date de début:</span>
               <span>{event.event_start_date}</span>
             </div>
 
             <div className="flex justify-between">
-              <span className="font-semibold">End:</span>
+              <span className="font-semibold">Date de fin:</span>
               <span>{event.event_end_date}</span>
             </div>
-
-            <div className="flex justify-end gap-3 mt-2">
-              <button onClick={() => handleEdit(event)}>✏️</button>
-              <button onClick={() => handleDelete(event.event_id)}>🗑️</button>
+            <div className="flex justify-between">
+              <span className="font-semibold">Actions:</span>
+              <div className="flex justify-end gap-3 mt-2">
+                <button onClick={() => handleEdit(event)}>✏️</button>
+                <button onClick={() => handleDelete(event.event_id)}>🗑️</button>
+              </div>
             </div>
           </div>
         ))}
