@@ -128,7 +128,6 @@ export default function LoginPage() {
           </Link>
         </form>
       </div>
-      {/* ✅ Footer */}
       <p className="mt-6 text-white text-sm md:text-base text-center opacity-90">
         Réalisé par{" "}
         <a
