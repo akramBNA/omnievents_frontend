@@ -1,14 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   username: string;
+  currentSection: "events" | "users";
+  setCurrentSection: (section: "events" | "users") => void;
 }
 
-export default function Sidebar({ username }: SidebarProps) {
+export default function Sidebar({
+  username,
+  currentSection,
+  setCurrentSection,
+}: SidebarProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -16,6 +21,22 @@ export default function Sidebar({ username }: SidebarProps) {
     localStorage.removeItem("token");
     router.push("/");
   };
+
+  const navButton = (label: string, section: "events" | "users") => (
+    <button
+      className={`w-full text-left p-2 rounded cursor-pointer ${
+        currentSection === section
+          ? "bg-blue-500 text-white"
+          : "bg-gray-200 hover:bg-gray-300"
+      }`}
+      onClick={() => {
+        setCurrentSection(section);
+        setOpen(false);
+      }}
+    >
+      {label}
+    </button>
+  );
 
   return (
     <>
@@ -29,7 +50,7 @@ export default function Sidebar({ username }: SidebarProps) {
       <aside
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-20 transform md:translate-x-0 transition-transform ${
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        } rounded-xl`}
       >
         <div className="flex flex-col h-full justify-between p-6">
           <div>
@@ -37,12 +58,8 @@ export default function Sidebar({ username }: SidebarProps) {
             <p className="text-gray-700 mb-6">Welcome, {username}</p>
 
             <nav className="flex flex-col gap-2">
-              <button className="w-full text-left p-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
-                Users
-              </button>
-              <button className="w-full text-left p-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
-                Events
-              </button>
+              {navButton("Users", "users")}
+              {navButton("Events", "events")}
             </nav>
           </div>
 
@@ -58,7 +75,6 @@ export default function Sidebar({ username }: SidebarProps) {
       <button
         className="fixed top-4 left-4 z-30 md:hidden bg-white p-2 rounded shadow"
         onClick={() => setOpen(true)}
-        style={{ top: "1rem", left: "1rem" }}
       >
         ☰
       </button>

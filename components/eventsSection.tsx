@@ -7,6 +7,7 @@ import { RootState, AppDispatch } from "../store";
 
 import EventsTable from "./eventsTable";
 import EventModal from "./eventModal";
+import { debounce } from "lodash";
 
 export default function EventsSection() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,10 @@ export default function EventsSection() {
     dispatch(fetchEvents({ limit: 10, offset: 0, keyword: search }));
   }, [dispatch, search]);
 
+  const debouncedSearch = debounce((val: string) => {
+    setSearch(val);
+  }, 500);
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4 flex-wrap gap-2 md:ml-64">
@@ -29,8 +34,7 @@ export default function EventsSection() {
             type="text"
             placeholder="Search..."
             className="p-2 border rounded"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => debouncedSearch(e.target.value)}
           />
           <button
             onClick={() => setIsModalOpen(true)}

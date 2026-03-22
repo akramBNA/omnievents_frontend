@@ -16,6 +16,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import EventModal from "./eventModal";
+import Swal from "sweetalert2";
+import { deleteEvent } from "@/store/eventsSlice";
 
 interface Event {
   event_id: number;
@@ -42,7 +44,23 @@ export default function EventsTable({ events }: EventsTableProps) {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Are you sure?",
+      text: "This event will be deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (isConfirmed) {
+      const result = await dispatch(deleteEvent(id));
+      if (deleteEvent.fulfilled.match(result)) {
+        Swal.fire("Deleted!", "Event has been deleted.", "success");
+      } else {
+        Swal.fire("Error!", "Failed to delete event.", "error");
+      }
+    }
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {

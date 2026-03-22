@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { createEvent, updateEvent } from "../store/eventsSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
+import Swal from "sweetalert2";
 
 interface Event {
   event_id: string | number;
@@ -56,8 +57,10 @@ export default function EventModal({
 
     if (event) {
       await dispatch(updateEvent({ id: Number(event.event_id), eventData }));
+      Swal.fire("Updated!", "Event has been updated.", "success");
     } else {
       await dispatch(createEvent(eventData));
+      Swal.fire("Created!", "Event has been created.", "success");
     }
     onClose();
   };

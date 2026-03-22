@@ -1,31 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import Sidebar from "../../components/sidebar";
-import EventsTable from "../../components/eventsTable";
-import EventModal from "../../components/eventModal";
-
-import { useDispatch, useSelector } from "react-redux";
-import { fetchEvents } from "../../store/eventsSlice";
-import { RootState, AppDispatch } from "../../store";
-import EventsSection from "@/components/eventsSection";
-import UsersSection from "@/components/usersSection";
+import EventsSection from "../../components/eventsSection";
+import UsersSection from "../../components/usersSection";
 
 export default function DashboardPage() {
   const { loading } = useAuth(["user", "admin", "super_admin"]);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { events } = useSelector((state: RootState) => state.events);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState<"events" | "users">("events");
-
-  const username = "Admin";
-
-  useEffect(() => {
-    dispatch(fetchEvents({ limit: 10, offset: 0 }));
-  }, [dispatch]);
+  const [currentSection, setCurrentSection] = useState<"events" | "users">(
+    "events"
+  );
 
   if (loading) {
     return (
@@ -36,8 +22,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-linear-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
-      <Sidebar username={username} />
+    <div className="flex min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
+      <Sidebar
+        username="Admin"
+        currentSection={currentSection}
+        setCurrentSection={setCurrentSection}
+      />
 
       <main className="flex-1 p-6 md:ml-64">
         {currentSection === "events" && <EventsSection />}
