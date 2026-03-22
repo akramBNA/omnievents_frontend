@@ -7,7 +7,7 @@ import EventsSection from "../../components/eventsSection";
 import UsersSection from "../../components/usersSection";
 
 export default function DashboardPage() {
-  const { loading } = useAuth(["user", "admin", "super_admin"]);
+  const { loading } = useAuth(["admin", "super_admin"]);
 
   const [currentSection, setCurrentSection] = useState<"events" | "users">(
     "events",

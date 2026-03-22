@@ -58,8 +58,8 @@ export default function Sidebar({
             <p className="text-gray-700 mb-6">Bonjour, {username}</p>
 
             <nav className="flex flex-col gap-2">
-              {navButton("Utilisateurs", "users")}
               {navButton("Événements", "events")}
+              {navButton("Utilisateurs", "users")}
             </nav>
           </div>
 

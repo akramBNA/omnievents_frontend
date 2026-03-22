@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const token = localStorage.getItem("token");
+export const fetchUsers = createAsyncThunk(
+  "users/fetchUsers",
+  async (params: { limit?: number; offset?: number; keyword?: string }) => {
+    const query = new URLSearchParams(params as any).toString();
+    const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_URL}/users/getAllUsers/`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    const res = await fetch(`${API_URL}/users/getAllUsers/?${query}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
 
-  return data.data;
-});
+    return data;
+  },
+);
 
 export const updateUserRole = createAsyncThunk(
   "users/updateUserRole",
@@ -36,25 +41,45 @@ export const updateUserRole = createAsyncThunk(
   },
 );
 
+export interface User {
+  user_id: number;
+  user_name: string;
+  user_lastname: string;
+  user_email: string;
+  user_role_id: number;
+}
+
+interface UsersState {
+  users: User[];
+  total: number;
+  loading: boolean;
+}
+
+const initialState: UsersState = {
+  users: [],
+  total: 0,
+  loading: false,
+};
+
 const usersSlice = createSlice({
   name: "users",
-  initialState: {
-    users: [] as unknown[],
-    loading: false,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (s) => {
-        s.loading = true;
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(fetchUsers.fulfilled, (s, a) => {
-        s.loading = false;
-        s.users = a.payload;
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload.data as User[];
+        state.total = action.payload.total;
       })
-      .addCase(updateUserRole.fulfilled, (s, a) => {
-        s.users = s.users.map((u: unknown) =>
-          (u as { user_id: number }).user_id === a.payload.user_id ? a.payload : u,
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.users = state.users.map((u) =>
+          u.user_id === (action.payload as User).user_id
+            ? (action.payload as User)
+            : u,
         );
       });
   },

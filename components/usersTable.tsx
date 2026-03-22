@@ -1,15 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Switch, TablePagination
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Switch,
+  TablePagination,
+  Chip,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUserRole } from "@/store/usersSlice";
-import { AppDispatch } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import Swal from "sweetalert2";
 
+import { User } from "@/store/usersSlice";
+
 interface Props {
-  users: any[];
+  users: User[];
+  total: number;
   page: number;
   rowsPerPage: number;
   onPageChange: (page: number) => void;
@@ -18,23 +29,38 @@ interface Props {
 
 export default function UsersTable({
   users,
+  total,
   page,
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
 }: Props) {
   const dispatch = useDispatch<AppDispatch>();
+  const { user: currentUser } = useSelector((s: RootState) => s.auth);
 
-  const handleToggle = async (user: any) => {
+  const handleToggle = async (user: User) => {
+    if (!currentUser?.user_role_id || currentUser.user_role_id !== 1) {
+      Swal.fire(
+        "Accès refusé",
+        "Seul le Super Admin peut modifier les rôles.",
+        "error",
+      );
+      return;
+    }
+
     if (user.user_id === 1) return;
 
     const newRole = user.user_role_id === 3 ? 2 : 3;
 
     const { isConfirmed } = await Swal.fire({
-      title: "Changer le rôle ?",
+      title: "Voulez-vous changer le rôle ?",
       text: "Cette action modifiera les permissions.",
-      icon: "question",
+      icon: "warning",
       showCancelButton: true,
+      confirmButtonText: "Oui, changer",
+      confirmButtonColor: "#3085d6",
+      cancelButtonText: "Annuler",
+      cancelButtonColor: "#d33",
     });
 
     if (!isConfirmed) return;
@@ -42,15 +68,13 @@ export default function UsersTable({
     dispatch(updateUserRole({ id: user.user_id, role_id: newRole }));
   };
 
-  const paginated = users.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   return (
     <>
       <div className="hidden md:block">
-        <TableContainer component={Paper} className="rounded-xl overflow-hidden">
+        <TableContainer
+          component={Paper}
+          className="rounded-xl overflow-hidden"
+        >
           <Table>
             <TableHead className="bg-gray-300">
               <TableRow>
@@ -70,12 +94,20 @@ export default function UsersTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                paginated.map((u) => (
+                users.map((u: User) => (
                   <TableRow key={u.user_id}>
                     <TableCell>{u.user_name}</TableCell>
                     <TableCell>{u.user_lastname}</TableCell>
                     <TableCell>{u.user_email}</TableCell>
-                    <TableCell>{u.user_role_id === 1 ? "Super Admin" : u.user_role_id === 2 ? "Admin" : "User"}</TableCell>
+                    <TableCell>
+                      {u.user_role_id === 1 ? (
+                        <Chip label="Super Admin" color="error" size="small" />
+                      ) : u.user_role_id === 2 ? (
+                        <Chip label="Admin" color="primary" size="small" />
+                      ) : (
+                        <Chip label="User" color="default" size="small" />
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Switch
                         checked={u.user_role_id === 2}
@@ -91,13 +123,14 @@ export default function UsersTable({
 
           <TablePagination
             component="div"
-            count={users.length}
+            count={total}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={(e, p) => onPageChange(p)}
             onRowsPerPageChange={(e) =>
               onRowsPerPageChange(parseInt(e.target.value, 10))
             }
+            rowsPerPageOptions={[5, 10, 20]}
           />
         </TableContainer>
       </div>
@@ -108,14 +141,27 @@ export default function UsersTable({
             Aucun utilisateur.
           </div>
         ) : (
-          paginated.map((u) => (
+          users.map((u) => (
             <div key={u.user_id} className="bg-white rounded-xl p-4 shadow">
-              <div><b>Nom:</b> {u.user_name}</div>
-              <div><b>Prénom:</b> {u.user_lastname}</div>
-              <div><b>Email:</b> {u.user_email}</div>
-              <div><b>Rôle:</b> {u.user_role_id === 1 ? "Super Admin" : u.user_role_id === 2 ? "Admin" : "User"}</div>
-
-              <div className="flex justify-between items-center mt-3">
+              <div>
+                <b>Nom:</b> {u.user_name}
+              </div>
+              <div>
+                <b>Prénom:</b> {u.user_lastname}
+              </div>
+              <div>
+                <b>Email:</b> {u.user_email}
+              </div>
+              <div className="my-2">
+                {u.user_role_id === 1 ? (
+                  <Chip label="Super Admin" color="error" size="small" />
+                ) : u.user_role_id === 2 ? (
+                  <Chip label="Admin" color="primary" size="small" />
+                ) : (
+                  <Chip label="User" color="default" size="small" />
+                )}
+              </div>
+              <div className="flex justify-between items-center mt-2">
                 <span>Admin</span>
                 <Switch
                   checked={u.user_role_id === 2}
