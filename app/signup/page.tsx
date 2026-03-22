@@ -40,7 +40,7 @@ export default function SignupPage() {
     try {
       const res = await signup(firstName, lastName, email, password);
       localStorage.setItem("token", res.token);
-      router.push("/dashboard");
+      router.push("/eventsPage");
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Erreur";
       setError(errorMessage);
@@ -52,7 +52,9 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 px-4">
       <div className="w-full max-w-md md:max-w-lg bg-white p-10 rounded-3xl shadow-2xl">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">Créer un compte</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-900">
+          Créer un compte
+        </h1>
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
@@ -99,6 +101,13 @@ export default function SignupPage() {
             ) : (
               "S'inscrire"
             )}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="w-full bg-red-600 text-white p-4 rounded-xl hover:bg-red-700 transition cursor-pointer"
+          >
+            Retour
           </button>
         </form>
       </div>

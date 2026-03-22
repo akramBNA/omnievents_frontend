@@ -7,12 +7,14 @@ interface SidebarProps {
   username: string;
   currentSection: "events" | "users";
   setCurrentSection: (section: "events" | "users") => void;
+  role: string | null;
 }
 
 export default function Sidebar({
   username,
   currentSection,
   setCurrentSection,
+  role,
 }: SidebarProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -59,7 +61,7 @@ export default function Sidebar({
 
             <nav className="flex flex-col gap-2">
               {navButton("Événements", "events")}
-              {navButton("Utilisateurs", "users")}
+              {role === "super_admin" && navButton("Utilisateurs", "users")}
             </nav>
           </div>
 
