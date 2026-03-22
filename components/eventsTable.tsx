@@ -87,49 +87,87 @@ export default function EventsTable({ events }: EventsTableProps) {
         }}
         event={editingEvent}
       />
+      <div className="hidden md:block">
+        <TableContainer
+          component={Paper}
+          className="rounded-xl overflow-hidden"
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                {["Name", "Details", "Start Date", "End Date", "Actions"].map(
+                  (h) => (
+                    <TableCell key={h}>{h}</TableCell>
+                  ),
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {events
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((event) => (
+                  <TableRow key={event.event_id}>
+                    <TableCell>{event.event_name}</TableCell>
+                    <TableCell>{event.event_details}</TableCell>
+                    <TableCell>{event.event_start_date}</TableCell>
+                    <TableCell>{event.event_end_date}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleEdit(event)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDelete(event.event_id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 20]}
+            component="div"
+            count={events.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </TableContainer>
+      </div>
+      {/* MOBILE CARDS */}
+      <div className="md:hidden flex flex-col gap-4">
+        {events.map((event) => (
+          <div
+            key={event.event_id}
+            className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
+          >
+            <div className="flex justify-between">
+              <span className="font-semibold">Name:</span>
+              <span>{event.event_name}</span>
+            </div>
 
-      <TableContainer component={Paper} className="rounded-xl overflow-hidden">
-        <Table>
-          <TableHead>
-            <TableRow>
-              {["Name", "Details", "Start Date", "End Date", "Actions"].map(
-                (h) => (
-                  <TableCell key={h}>{h}</TableCell>
-                ),
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {events
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((event) => (
-                <TableRow key={event.event_id}>
-                  <TableCell>{event.event_name}</TableCell>
-                  <TableCell>{event.event_details}</TableCell>
-                  <TableCell>{event.event_start_date}</TableCell>
-                  <TableCell>{event.event_end_date}</TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleEdit(event)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(event.event_id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 20]}
-          component="div"
-          count={events.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
+            <div className="flex justify-between">
+              <span className="font-semibold">Details:</span>
+              <span className="text-right">{event.event_details}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="font-semibold">Start:</span>
+              <span>{event.event_start_date}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="font-semibold">End:</span>
+              <span>{event.event_end_date}</span>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-2">
+              <button onClick={() => handleEdit(event)}>✏️</button>
+              <button onClick={() => handleDelete(event.event_id)}>🗑️</button>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
