@@ -52,7 +52,7 @@ export default function Sidebar({
       <aside
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-20 transform md:translate-x-0 transition-transform ${
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } rounded-xl`}
+        } `}
       >
         <div className="flex flex-col h-full justify-between p-6">
           <div>
