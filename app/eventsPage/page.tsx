@@ -70,17 +70,12 @@ export default function EventsPage() {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
       
-      {/* Sidebar */}
       <EventsSidebar username={user?.user_name || "User"} />
 
-      {/* Main */}
       <main className="flex-1 p-6 md:ml-64 mt-4">
         
-        {/* Header (Title + Search) */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <h1 className="text-4xl text-white font-bold">
-            Événements
-          </h1>
+          <h1 className="text-4xl text-white font-bold mt-5">Événements</h1>
 
           <input
             type="text"
@@ -90,7 +85,6 @@ export default function EventsPage() {
           />
         </div>
 
-        {/* Table */}
         <EventsPageTable
           events={events}
           total={total}
