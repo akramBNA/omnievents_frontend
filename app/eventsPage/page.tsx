@@ -7,10 +7,8 @@ import { fetchEvents, subscribeToEvent } from "@/store/eventsSlice";
 import { RootState, AppDispatch } from "@/store";
 import debounce from "lodash/debounce";
 import { useAuth } from "@/hooks/useAuth";
-
 import EventsPageNavbar from "@/components/events-page/EventsPageNavbar";
 import EventsPageTable from "@/components/events-page/EventsPageTable";
-import EventsPageCards from "@/components/events-page/EventsPageCard";
 import Swal from "sweetalert2";
 
 export default function EventsPage() {
@@ -87,14 +85,6 @@ export default function EventsPage() {
               onSubscribe={handleSubscribe}
             />
           </div>
-
-          {/* <div className="md:hidden">
-            <EventsPageCards
-              events={events}
-              onSubscribe={handleSubscribe}
-              userId={user?.user_id}
-            />
-          </div> */}
         </div>
       </div>
     </div>

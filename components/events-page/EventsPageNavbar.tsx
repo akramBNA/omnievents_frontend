@@ -6,7 +6,7 @@ import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function EventsPageNavbar({ onSearch }: any) {
+export default function EventsPageNavbar() {
   const { user } = useSelector((s: RootState) => s.auth);
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -19,20 +19,12 @@ export default function EventsPageNavbar({ onSearch }: any) {
   return (
     <>
       <div className="flex justify-between items-center p-4 bg-white shadow-md">
-        <button className="md:hidden" onClick={() => setOpen(true)}>
-          ☰
-        </button>
+        <button className="md:hidden" onClick={() => setOpen(true)}>☰</button>
 
         <h1 className="text-xl font-bold text-blue-700">OMNIEVENTS</h1>
 
         <div className="hidden md:flex items-center gap-4">
           <span>Bonjour, {user?.user_name}</span>
-
-          <input
-            placeholder="Chercher..."
-            className="p-2 rounded border"
-            onChange={(e) => onSearch(e.target.value)}
-          />
 
           <button
             onClick={logout}
@@ -55,13 +47,8 @@ export default function EventsPageNavbar({ onSearch }: any) {
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <p className="mb-4 font-bold">Bonjour, {user?.user_name}</p>
-
-        <input
-          placeholder="Chercher..."
-          className="w-full mb-4 p-2 border rounded"
-          onChange={(e) => onSearch(e.target.value)}
-        />
+        <p className="mt-4 mb-4 text-3xl font-extrabold">Bonjour</p>
+        <p className="mb-4 text-2xl font-bold">{user?.user_name}</p>
 
         <button
           onClick={logout}
