@@ -41,7 +41,9 @@ export default function EventsSidebar({ username }: { username: string }) {
       </aside>
 
       <button
-        className="fixed top-4 left-4 z-30 p-2 bg-white rounded-md shadow-md md:hidden"
+        className={`fixed top-4 left-4 z-30 md:hidden bg-white p-2 rounded shadow ${
+          open ? "hidden" : ""
+        }`}
         onClick={() => setOpen(true)}
       >
         ☰
