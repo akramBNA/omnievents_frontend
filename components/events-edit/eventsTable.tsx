@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 import {
   Table,
   TableBody,
@@ -163,42 +163,52 @@ export default function EventsTable({
             Il n&apos;y a pas d&apos;événements.
           </div>
         ) : (
-          events.map((event) => (
-            <div
-              key={event.event_id}
-              className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
-            >
-              <div className="flex justify-between">
-                <span className="font-semibold">Nom d&apos;événement:</span>
-                <span>{event.event_name}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="font-semibold">Détails d&apos;événement:</span>
-                <span className="text-right">{event.event_details}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="font-semibold">Date de début:</span>
-                <span>{event.event_start_date}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="font-semibold">Date de fin:</span>
-                <span>{event.event_end_date}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="font-semibold">Actions:</span>
-                <div className="flex justify-end gap-3 mt-2">
-                  <button onClick={() => handleEdit(event)}>✏️</button>
-                  <button onClick={() => handleDelete(event.event_id)}>
-                    🗑️
-                  </button>
+          <>
+            {events.map((event) => (
+              <div
+                key={event.event_id}
+                className="bg-white rounded-2xl shadow-lg p-4 flex flex-col gap-2"
+              >
+                <div className="flex justify-between">
+                  <span className="font-semibold">Nom d&apos;événement:</span>
+                  <span>{event.event_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold">
+                    Détails d&apos;événement:
+                  </span>
+                  <span className="text-right">{event.event_details}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold">Date de début:</span>
+                  <span>{event.event_start_date}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold">Date de fin:</span>
+                  <span>{event.event_end_date}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-semibold">Actions:</span>
+                  <div className="flex justify-end gap-3 mt-2">
+                    <button onClick={() => handleEdit(event)}>✏️</button>
+                    <button onClick={() => handleDelete(event.event_id)}>
+                      🗑️
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+            <TablePagination
+              className="bg-white"
+              rowsPerPageOptions={[5, 10, 20]}
+              component="div"
+              count={total}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
         )}
       </div>
     </>
