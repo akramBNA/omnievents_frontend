@@ -46,7 +46,7 @@ export default function EventsSection() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4 flex-wrap gap-2 md:ml-64">
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h1 className="text-4xl text-white font-bold">Événements</h1>
 
         <div className="flex gap-2 flex-wrap">
