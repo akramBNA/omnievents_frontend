@@ -75,7 +75,7 @@ export default function EventsPage() {
       <main className="flex-1 p-6 md:ml-64 mt-4">
         
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <h1 className="text-4xl text-white font-bold mt-5">Événements</h1>
+          <h1 className="text-4xl text-white font-bold">Événements</h1>
 
           <input
             type="text"
