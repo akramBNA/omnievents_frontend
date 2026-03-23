@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
+
 import { RootState } from "@/store";
 import {
   TableContainer,
@@ -70,7 +72,7 @@ export default function EventsPageTable({
                         <Button
                           variant="contained"
                           size="small"
-                          disabled={!!e.isSubscribed}
+                          disabled={!!e.subscribedUsers?.includes(user.user_id)}
                           onClick={() => onSubscribe(e)}
                           sx={{
                             backgroundColor: e.isSubscribed
@@ -120,20 +122,15 @@ export default function EventsPageTable({
                   <span className="font-semibold">Fin:</span> {e.event_end_date}
                 </div>
                 <Button
-                  size="small"
                   variant="contained"
-                  fullWidth
+                  size="small"
                   disabled={!!e.subscribedUsers?.includes(user.user_id)}
                   onClick={() => onSubscribe(e)}
                   sx={{
-                    backgroundColor: e.subscribedUsers?.includes(user.user_id)
-                      ? "#ccc"
-                      : "#2563eb",
+                    backgroundColor: e.isSubscribed ? "#ccc" : "#2563eb",
                   }}
                 >
-                  {e.subscribedUsers?.includes(user.user_id)
-                    ? "Inscrit"
-                    : "S'inscrire"}
+                  {e.isSubscribed ? "Inscrit" : "S'inscrire"}
                 </Button>
               </div>
             ))}

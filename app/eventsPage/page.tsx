@@ -14,11 +14,12 @@ import Swal from "sweetalert2";
 export default function EventsPage() {
   const { loading } = useAuth(["user", "admin", "super_admin"]);
   const user = useSelector((s: RootState) => s.auth.user);
-
   const dispatch = useDispatch<AppDispatch>();
-  const { events, total, loading: eventsLoading } = useSelector(
-    (s: RootState) => s.events,
-  );
+  const {
+    events,
+    total,
+    loading: eventsLoading,
+  } = useSelector((s: RootState) => s.events);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -31,9 +32,10 @@ export default function EventsPage() {
         limit: rowsPerPage,
         offset: page * rowsPerPage,
         keyword: search,
+        user_id: user.user_id,
       }),
     );
-  }, [dispatch, page, rowsPerPage, search]);
+  }, [dispatch, page, rowsPerPage, search, user]);
 
   const debouncedSearch = useMemo(
     () =>
@@ -44,39 +46,36 @@ export default function EventsPage() {
     [],
   );
 
-  useEffect(() => {
-    return () => debouncedSearch.cancel();
-  }, [debouncedSearch]);
+  useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
 
   const handleSubscribe = async (event: any) => {
     if (!user) return;
+    try {
+      const res = await dispatch(
+        subscribeToEvent({ user_id: user.user_id, event_id: event.event_id }),
+      );
 
-    const res = await dispatch(
-      subscribeToEvent({
-        user_id: user.user_id,
-        event_id: event.event_id,
-      }),
-    );
-
-    if (subscribeToEvent.fulfilled.match(res)) {
-      Swal.fire("Succès", "Inscription réussie", "success");
-    } else {
-      Swal.fire("Info", "Déjà inscrit ou erreur", "info");
+      if (subscribeToEvent.fulfilled.match(res)) {
+        Swal.fire("Succès", "Inscription réussie", "success");
+      } else {
+        Swal.fire("Info", "Déjà inscrit ou erreur", "info");
+      }
+    } catch (err) {
+      Swal.fire("Erreur", "Impossible de s'inscrire", "error");
     }
   };
 
-  if (loading) return null;
+  if (loading || !user) {
+    return <div className="text-center py-10 text-white">Chargement...</div>;
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
-      
-      <EventsSidebar username={user?.user_name || "User"} />
+      <EventsSidebar username={user.user_name} />
 
       <main className="flex-1 p-6 md:ml-64 mt-4">
-        
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <h1 className="text-4xl text-white font-bold">Événements</h1>
-
           <input
             type="text"
             placeholder="Chercher un événement..."
@@ -91,7 +90,7 @@ export default function EventsPage() {
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={setPage}
-          onRowsPerPageChange={(val: number) => {
+          onRowsPerPageChange={(val) => {
             setRowsPerPage(val);
             setPage(0);
           }}

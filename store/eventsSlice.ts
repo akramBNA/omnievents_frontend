@@ -5,7 +5,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
-  async (params: { limit?: number; offset?: number; keyword?: string; user_id?: number }) => {
+  async (params: {
+    limit?: number;
+    offset?: number;
+    keyword?: string;
+    user_id?: number;
+  }) => {
     const query = new URLSearchParams(params as any).toString();
     const token = localStorage.getItem("token");
 
@@ -16,7 +21,7 @@ export const fetchEvents = createAsyncThunk(
       },
     });
     const data = await res.json();
-        
+
     if (!res.ok) throw new Error(data.message);
 
     return data;
@@ -99,7 +104,7 @@ export const subscribeToEvent = createAsyncThunk(
     if (!res.ok) throw new Error(data.message);
 
     return data;
-  }
+  },
 );
 
 const eventsSlice = createSlice({
@@ -141,6 +146,18 @@ const eventsSlice = createSlice({
         state.events = state.events.filter(
           (e: any) => e.event_id !== action.payload,
         );
+      })
+
+      .addCase(subscribeToEvent.fulfilled, (state, action) => {
+        const { user_id, event_id } = action.meta.arg;
+        const event = state.events.find((e: any) => e.event_id === event_id);
+        if (event) {
+          event.subscribedUsers = event.subscribedUsers || [];
+          if (!event.subscribedUsers.includes(user_id)) {
+            event.subscribedUsers.push(user_id);
+            event.isSubscribed = true;
+          }
+        }
       });
   },
 });
