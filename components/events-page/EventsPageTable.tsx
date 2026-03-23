@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
+
 import { RootState } from "@/store";
 import {
   TableContainer,
@@ -70,7 +72,7 @@ export default function EventsPageTable({
                         <Button
                           variant="contained"
                           size="small"
-                          disabled={!!e.isSubscribed}
+                          disabled={!!e.subscribedUsers?.includes(user.user_id)}
                           onClick={() => onSubscribe(e)}
                           sx={{
                             backgroundColor: e.isSubscribed
@@ -86,6 +88,17 @@ export default function EventsPageTable({
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              component="div"
+              count={total}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={(e, p) => onPageChange(p)}
+              onRowsPerPageChange={(e) =>
+                onRowsPerPageChange(parseInt(e.target.value, 10))
+              }
+              rowsPerPageOptions={[5, 10, 20]}
+            />
           </div>
 
           <div className="md:hidden flex flex-col gap-4">
@@ -109,40 +122,18 @@ export default function EventsPageTable({
                   <span className="font-semibold">Fin:</span> {e.event_end_date}
                 </div>
                 <Button
-                  size="small"
                   variant="contained"
-                  fullWidth
-                  disabled={!!e.isSubscribed}
+                  size="small"
+                  disabled={!!e.subscribedUsers?.includes(user.user_id)}
                   onClick={() => onSubscribe(e)}
-                  sx={{ backgroundColor: e.isSubscribed ? "#ccc" : "#2563eb" }}
+                  sx={{
+                    backgroundColor: e.isSubscribed ? "#ccc" : "#2563eb",
+                  }}
                 >
                   {e.isSubscribed ? "Inscrit" : "S'inscrire"}
                 </Button>
               </div>
             ))}
-
-            <div className="flex justify-between items-center mt-4">
-              <button
-                disabled={page === 0}
-                onClick={() => onPageChange(page - 1)}
-                className="bg-blue-500 text-white px-3 py-1 rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              <span>
-                Page {page + 1} / {Math.ceil(total / rowsPerPage)}
-              </span>
-              <button
-                disabled={(page + 1) * rowsPerPage >= total}
-                onClick={() => onPageChange(page + 1)}
-                className="bg-blue-500 text-white px-3 py-1 rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-
-          <div className="hidden md:block mt-4">
             <TablePagination
               component="div"
               count={total}

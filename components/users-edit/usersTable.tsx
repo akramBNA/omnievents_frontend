@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import {
   Table,
   TableBody,
@@ -134,43 +136,56 @@ export default function UsersTable({
           />
         </TableContainer>
       </div>
-
       <div className="md:hidden flex flex-col gap-4">
         {users.length === 0 ? (
           <div className="bg-white p-6 rounded-xl text-center">
             Aucun utilisateur.
           </div>
         ) : (
-          users.map((u) => (
-            <div key={u.user_id} className="bg-white rounded-xl p-4 shadow">
-              <div>
-                <b>Nom:</b> {u.user_name}
+          <>
+            {users.map((u) => (
+              <div key={u.user_id} className="bg-white rounded-xl p-4 shadow">
+                <div>
+                  <b>Nom:</b> {u.user_name}
+                </div>
+                <div>
+                  <b>Prénom:</b> {u.user_lastname}
+                </div>
+                <div>
+                  <b>Email:</b> {u.user_email}
+                </div>
+                <div className="my-2">
+                  {u.user_role_id === 1 ? (
+                    <Chip label="Super Admin" color="error" size="small" />
+                  ) : u.user_role_id === 2 ? (
+                    <Chip label="Admin" color="primary" size="small" />
+                  ) : (
+                    <Chip label="User" color="default" size="small" />
+                  )}
+                </div>
+                <div className="flex justify-between items-center mt-2">
+                  <span>Admin</span>
+                  <Switch
+                    checked={u.user_role_id === 2}
+                    disabled={u.user_id === 1}
+                    onChange={() => handleToggle(u)}
+                  />
+                </div>
               </div>
-              <div>
-                <b>Prénom:</b> {u.user_lastname}
-              </div>
-              <div>
-                <b>Email:</b> {u.user_email}
-              </div>
-              <div className="my-2">
-                {u.user_role_id === 1 ? (
-                  <Chip label="Super Admin" color="error" size="small" />
-                ) : u.user_role_id === 2 ? (
-                  <Chip label="Admin" color="primary" size="small" />
-                ) : (
-                  <Chip label="User" color="default" size="small" />
-                )}
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <span>Admin</span>
-                <Switch
-                  checked={u.user_role_id === 2}
-                  disabled={u.user_id === 1}
-                  onChange={() => handleToggle(u)}
-                />
-              </div>
-            </div>
-          ))
+            ))}
+            <TablePagination
+              className="bg-white"
+              component="div"
+              count={total}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={(e, p) => onPageChange(p)}
+              onRowsPerPageChange={(e) =>
+                onRowsPerPageChange(parseInt(e.target.value, 10))
+              }
+              rowsPerPageOptions={[5, 10, 20]}
+            />
+          </>
         )}
       </div>
     </>
