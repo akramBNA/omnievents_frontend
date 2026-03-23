@@ -7,8 +7,8 @@ import { fetchEvents, subscribeToEvent } from "@/store/eventsSlice";
 import { RootState, AppDispatch } from "@/store";
 import debounce from "lodash/debounce";
 import { useAuth } from "@/hooks/useAuth";
-import EventsPageNavbar from "@/components/events-page/EventsPageNavbar";
 import EventsPageTable from "@/components/events-page/EventsPageTable";
+import EventsSidebar from "@/components/events-page/EventsSidebar";
 import Swal from "sweetalert2";
 
 export default function EventsPage() {
@@ -16,11 +16,9 @@ export default function EventsPage() {
   const user = useSelector((s: RootState) => s.auth.user);
 
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    events,
-    total,
-    loading: eventsLoading,
-  } = useSelector((s: RootState) => s.events);
+  const { events, total, loading: eventsLoading } = useSelector(
+    (s: RootState) => s.events,
+  );
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -46,8 +44,13 @@ export default function EventsPage() {
     [],
   );
 
+  useEffect(() => {
+    return () => debouncedSearch.cancel();
+  }, [debouncedSearch]);
+
   const handleSubscribe = async (event: any) => {
     if (!user) return;
+
     const res = await dispatch(
       subscribeToEvent({
         user_id: user.user_id,
@@ -65,42 +68,43 @@ export default function EventsPage() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
-      <EventsPageNavbar />
+    <div className="flex min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
+      
+      {/* Sidebar */}
+      <EventsSidebar username={user?.user_name || "User"} />
 
-      <div className="p-4 md:p-10 flex justify-center">
-        <div className="w-full max-w-6xl">
-          <div>
-            <div className="bg-white rounded-2xl shadow-lg p-4 mb-4">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                {/* Left: Title */}
-                <h2 className="text-2xl font-bold text-gray-800">Evénements</h2>
+      {/* Main */}
+      <main className="flex-1 p-6 md:ml-64 mt-4">
+        
+        {/* Header (Title + Search) */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <h1 className="text-4xl text-white font-bold">
+            Événements
+          </h1>
 
-                {/* Right: Search */}
-                <input
-                  type="text"
-                  placeholder="Chercher un événement..."
-                  className="w-full md:w-80 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => debouncedSearch(e.target.value)}
-                />
-              </div>
-            </div>
-            <EventsPageTable
-              events={events}
-              total={total}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={setPage}
-              onRowsPerPageChange={(val: number) => {
-                setRowsPerPage(val);
-                setPage(0);
-              }}
-              loading={eventsLoading}
-              onSubscribe={handleSubscribe}
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Chercher un événement..."
+            className="p-2 rounded-lg bg-white/90 border border-white shadow focus:outline-none md:w-80"
+            onChange={(e) => debouncedSearch(e.target.value)}
+          />
         </div>
-      </div>
+
+        {/* Table */}
+        <EventsPageTable
+          events={events}
+          total={total}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setPage}
+          onRowsPerPageChange={(val: number) => {
+            setRowsPerPage(val);
+            setPage(0);
+          }}
+          loading={eventsLoading}
+          onSubscribe={handleSubscribe}
+        />
+      </main>
     </div>
   );
 }
