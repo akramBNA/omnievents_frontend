@@ -66,11 +66,25 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600">
-      <EventsPageNavbar onSearch={debouncedSearch} />
+      <EventsPageNavbar />
 
       <div className="p-4 md:p-10 flex justify-center">
         <div className="w-full max-w-6xl">
           <div>
+            <div className="bg-white rounded-2xl shadow-lg p-4 mb-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                {/* Left: Title */}
+                <h2 className="text-2xl font-bold text-gray-800">Evénements</h2>
+
+                {/* Right: Search */}
+                <input
+                  type="text"
+                  placeholder="Chercher un événement..."
+                  className="w-full md:w-80 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => debouncedSearch(e.target.value)}
+                />
+              </div>
+            </div>
             <EventsPageTable
               events={events}
               total={total}
