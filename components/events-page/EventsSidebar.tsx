@@ -16,7 +16,9 @@ export default function EventsSidebar({ username }: { username: string }) {
     <>
       {open && (
         <div
-          className="fixed inset-0 bg-black/30 z-10 md:hidden"
+          className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-10 md:hidden transition-opacity ${
+            open ? "block" : "hidden"
+          }`}
           onClick={() => setOpen(false)}
         />
       )}
@@ -26,7 +28,9 @@ export default function EventsSidebar({ username }: { username: string }) {
           ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <div>
-          <h2 className="mb-8 mt-4 text-3xl font-extrabold text-black">OMNIEVENTS</h2>
+          <h2 className="mb-8 mt-4 text-3xl font-extrabold text-black">
+            OMNIEVENTS
+          </h2>
 
           <p className="mb-4 text-2xl font-bold">Bonjour</p>
           <p className="mb-4 text-2xl font-bold">{username}</p>
