@@ -31,5 +31,3 @@ pnpm dev
 # or
 bun dev
 ```
-
-## USER STORY:
